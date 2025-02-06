@@ -10,11 +10,12 @@ import weather_api_functions
 # Function to predict mean yield using ML model
 def predict_mean_yield(model, data):
     yields = []
+    columns = ["temp", "humid", "precip", "wind_speed", "sunshine", "ndvi", "gndvi", "ndmi", "savi", "ndre"]
     for feature_vector in data:
         if None in feature_vector:
             continue
-        feature_array = np.array(feature_vector).reshape(1, -1)
-        yield_prediction = model.predict(feature_array)[0]
+        feature_df = pd.DataFrame([feature_vector], columns=columns)  # Convert to DataFrame
+        yield_prediction = model.predict(feature_df)[0]
         yields.append(yield_prediction)
     return np.mean(yields)
 
