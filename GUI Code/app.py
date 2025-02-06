@@ -7,7 +7,6 @@ import requests
 import pickle
 import numpy as np
 
-
 ee.Initialize(project="ee-salmanahmed10124") # Using a cloud project for connection with GEE API
 
 # Function to extract coordinates of a field polygon inside KML file
@@ -145,13 +144,13 @@ def mean_coordinates(coordinates):
 # Define the prediction function
 def predict_mean_yield(model, data):
     yields = []
+    columns = ["temp", "humid", "precip", "wind_speed", "sunshine", "ndvi", "gndvi", "ndmi", "savi", "ndre"]
     for feature_vector in data:
         if None in feature_vector:
             continue
-        feature_array = np.array(feature_vector).reshape(1, -1)
-        yield_prediction = model.predict(feature_array)[0]
+        feature_df = pd.DataFrame([feature_vector], columns=columns)  # Convert to DataFrame
+        yield_prediction = model.predict(feature_df)[0]
         yields.append(yield_prediction)
-    # st.write(yields)
     return np.mean(yields)
 
 # Intro section
